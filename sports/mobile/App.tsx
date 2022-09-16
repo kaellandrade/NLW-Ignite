@@ -1,39 +1,32 @@
-import {StatusBar} from 'expo-status-bar';
-import {StyleSheet, Text, Touchable, TouchableOpacity, View} from 'react-native';
+import { StatusBar } from "react-native";
+import {
+  useFonts,
+  Inter_400Regular,
+  Inter_600SemiBold,
+  Inter_700Bold,
+  Inter_900Black,
+} from "@expo-google-fonts/inter";
 
-interface ButtonProps {
-	title: string
-}
-
-function Button(props: ButtonProps) {
-	return <TouchableOpacity>
-		<Text>
-			{props.title}
-		</Text>
-	</TouchableOpacity>
-}
-
+import { Home } from "./src/screens/Home";
+import { Background } from "./src/components/Background";
+import { Loading } from "./src/components/Loading";
 
 export default function App() {
-	return (
-		<View style={styles.container}>
-			<Text style={styles.text}>Hello, World!</Text>
-			<StatusBar style="auto"/>
-			<Button title='Clique aqui'/>
-		</View>
-	);
-}
+  const [fontsLoaded] = useFonts({
+    Inter_400Regular,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    Inter_900Black,
+  });
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#093085',
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	text: {
-		backgroundColor:'red',
-		color: 'white',
-		fontWeight: 'bold'
-	}
-});
+  return (
+    <Background>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
+      {fontsLoaded ? <Home/> : <Loading/>}
+    </Background>
+  );
+}
