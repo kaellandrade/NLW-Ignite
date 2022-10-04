@@ -2,17 +2,12 @@ import * as Dialog from '@radix-ui/react-dialog';
 import * as CheckBox from '@radix-ui/react-checkbox';
 import * as Select from '@radix-ui/react-select';
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
-import {
-	CaretDown,
-	CaretUp,
-	Check,
-	GameController,
-	Target,
-} from 'phosphor-react';
+import { CaretDown, CaretUp, Check, GameController } from 'phosphor-react';
 import { Input } from './Form/input';
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { WEEK_DAYS } from '../constants';
 import API from '../../api/api';
+import axios from 'axios';
 interface Game {
 	id: string;
 	title: string;
@@ -30,6 +25,37 @@ export function CreateAdModal() {
 		getAllGames();
 	}, []);
 
+	function handleCreateAd(event: FormEvent) {
+		// Validar
+
+		event.preventDefault();
+		const formData = new FormData(event.target as HTMLFormElement);
+		const data = Object.fromEntries(formData);
+		const weekDaysObj = weekdays
+			.map((item) => {
+				return {
+					[WEEK_DAYS[Number(item)].toLocaleLowerCase()]: item,
+				};
+			})
+			.reduce((pre, cur) => {
+				return { ...pre, ...cur };
+			}, {});
+		try {
+			API.post(`/games/${data.game}/ads`, {
+				name: data.name,
+				yearsPlaying: Number(data.yearsPlaying),
+				discord: data.discord,
+				weekDays: weekDaysObj,
+				hourStart: data.hourStart,
+				hourEnd: data.hoursEnd,
+				useVoiceChannel: Boolean(data.useVoiceChannel),
+			});
+			alert('Anúcio criado com sucesso!');
+		} catch (error) {
+			alert(error);
+		}
+	}
+
 	return (
 		<Dialog.Portal>
 			<Dialog.Overlay className="bg-black/60 inset-0 fixed" />
@@ -37,12 +63,15 @@ export function CreateAdModal() {
 				<Dialog.Title className="text-3xl text-white font-black">
 					Publique um anúncio.
 				</Dialog.Title>
-				<form className="mt-8 flex flex-col gap-4">
+				<form
+					className="mt-8 flex flex-col gap-4"
+					onSubmit={handleCreateAd}
+				>
 					<div className="flex flex-col gap-2 rounded p-1 bg-zinc-900 content-center ">
-						<Select.Root>
+						<Select.Root name="game">
 							<Select.SelectTrigger
 								aria-label="Games"
-								className="flex text-sm text-zinc-500 py-3 px-4 rounded justify-between"
+								className="flex text-sm text-white4 py-3 px-4 rounded justify-between"
 							>
 								<Select.SelectValue
 									className="text-sm"
@@ -84,6 +113,7 @@ export function CreateAdModal() {
 						<label htmlFor="name">Seu nome (ou nickname)</label>
 						<Input
 							id="name"
+							name="name"
 							placeholder="Como te chamam dentro do game ?"
 						/>
 					</div>
@@ -95,6 +125,7 @@ export function CreateAdModal() {
 							<Input
 								type="number"
 								id="yearsPlaying"
+								name="yearsPlaying"
 								placeholder="Tudo bem ser ZERO"
 							/>
 						</div>
@@ -104,6 +135,7 @@ export function CreateAdModal() {
 							<Input
 								type="text"
 								id="discord"
+								name="discord"
 								placeholder="Usuario#0000"
 							/>
 						</div>
@@ -122,6 +154,7 @@ export function CreateAdModal() {
 								>
 									{WEEK_DAYS.map((day, index) => (
 										<ToggleGroup.Item
+											name="weekday"
 											value={String(index)}
 											title={day}
 											className={`w-8 h-8 rounded ${
@@ -145,11 +178,13 @@ export function CreateAdModal() {
 									type="time"
 									id="hourStart"
 									placeholder="De"
+									name="hourStart"
 								/>
 								<Input
 									type="time"
 									id="hoursEnd"
 									placeholder="Até"
+									name="hoursEnd"
 								/>
 							</div>
 						</div>
@@ -159,6 +194,8 @@ export function CreateAdModal() {
 						<CheckBox.Root
 							className="w-6 h-6 rounded p-1 bg-zinc-900"
 							id="useVoiceChannel"
+							name="useVoiceChannel"
+							value={'on'}
 						>
 							<CheckBox.Indicator>
 								<Check className="w-4 h-4 text-emerald-400" />
