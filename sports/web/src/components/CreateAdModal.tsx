@@ -8,6 +8,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { WEEK_DAYS } from '../constants';
 import API from '../../api/api';
 import axios from 'axios';
+import { ButtonNlw } from './Button';
 interface Game {
 	id: string;
 	title: string;
@@ -213,12 +214,13 @@ export function CreateAdModal() {
 						<Dialog.Close className="bg-zinc-500 px-5 h-12 rounded-md font-semibold hover:bg-zinc-600">
 							Cancelar
 						</Dialog.Close>
-						<button
-							className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600"
-							type="submit"
+						<ButtonNlw
+							className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3
+				 hover:bg-violet-600"
+							title="Entar"
 						>
-							<GameController size={24} /> Encontrar duo
-						</button>
+							<GameController size={24} />
+						</ButtonNlw>
 					</footer>
 				</form>
 			</Dialog.Content>

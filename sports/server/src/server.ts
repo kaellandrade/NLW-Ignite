@@ -74,19 +74,24 @@ app.get("/games/:gameId/ads", async (request, response) => {
   }));
 });
 
-app.get("/ads/:id/discord", async (request, response) => {
-  const adId = request.params.id;
+app.post("/games/:id/ads", async (request, response) => {
+  const gameId = request.params.id;
+  const body: any = request.body;
 
-  const ad = await prisma.ad.findUniqueOrThrow({
-    select: {
-      discord: true,
-    },
-    where: {
-      id: adId,
+  const ad = await prisma.ad.create({
+    data: {
+      gameId,
+      name: body.name,
+      yearsPlaying: body.yearsPlaying,
+      discord: body.discord,
+      weekDays: body.weekDays,
+      hourStart: convertHoursStringToMinutes(body.hourStart),
+      hourEnd: convertHoursStringToMinutes(body.hourEnd),
+      useVoiceChannel: body.useVoiceChannel,
     },
   });
 
-  return response.json({ discord: ad.discord });
+  return response.status(201).json(ad);
 });
 
 app.listen(3333);

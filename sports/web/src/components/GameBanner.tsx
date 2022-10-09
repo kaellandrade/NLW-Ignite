@@ -1,8 +1,10 @@
+import { SwiperSlide } from 'swiper/react';
+
 interface GameBannerProps {
-	id?: string
-	bannerUrl: string
-	title: string
-	adsCount: number
+	id?: string;
+	bannerUrl: string;
+	title: string;
+	adsCount: number;
 }
 
 export function GameBanner(props: GameBannerProps) {
@@ -19,5 +21,5 @@ export function GameBanner(props: GameBannerProps) {
 				</span>
 			</div>
 		</a>
-	)
+	);
 }
