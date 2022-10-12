@@ -1,10 +1,14 @@
 import { BrowserRouter as Router } from 'react-router-dom';
+import {AuthProvider} from './context/auth';
 import { Rotas } from './routes';
+
 function App() {
 	return (
-		<Router>
-			<Rotas />
-		</Router>
+		<AuthProvider>
+			<Router>
+				<Rotas />
+			</Router>
+		</AuthProvider>
 	);
 }
 
