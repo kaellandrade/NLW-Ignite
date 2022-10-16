@@ -11,7 +11,9 @@ import logo from '../../assets/logo-nlw-esports.svg';
 import { GameBanner } from '../../components/GameBanner';
 import { CreateAdBanner } from '../../components/CreateAdBanner';
 import { CreateAdModal } from '../../components/CreateAdModal';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import AuthContext, { Context } from '../../context/auth';
+import { ProfileDiscord } from '../../components/ProfileDiscord';
 
 interface Game {
 	id: string;
@@ -25,6 +27,8 @@ interface Game {
 
 export function Home() {
 	const [games, setGames] = useState<Game[]>([]);
+	const context = useContext(AuthContext) as Context;
+	const { username, avatar, id, discriminator } = context.state.user;
 
 	useEffect(function () {
 		const getAllGames = async () => {
@@ -35,17 +39,16 @@ export function Home() {
 	}, []);
 
 	return (
-		<div className="max-w-[1344px] mx-auto flex flex-col items-center my-20">
-			<img src={logo} alt="" />
-			<h1 className="text-6xl text-white font-black mt-20">
-				Seu
-				<span className="text-transparent bg-nlw-gradient bg-clip-text">
-					{' '}
-					duo{' '}
-				</span>
-				está aqui.
+		<div className="max-w-[1344px] mx-auto flex flex-col items-center">
+			<ProfileDiscord
+				name={username}
+				urlAvatar={`https://cdn.discordapp.com/avatars/${id}/${avatar}.jpg`}
+				user={`#${discriminator}`}
+			/>
+			<img src={logo} alt="" className='mt-20'/>
+			<h1 className="text-4xl text-white font-black mt-10">
+				Seu duo está aqui.
 			</h1>
-
 			<Swiper
 				effect={'cards'}
 				grabCursor={true}
@@ -53,7 +56,7 @@ export function Home() {
 				className="mySwiper my-10"
 			>
 				{games.map((game: Game) => (
-					<SwiperSlide>
+					<SwiperSlide key={game.id}>
 						<GameBanner
 							title={game.title}
 							bannerUrl={game.bannerUrl}
