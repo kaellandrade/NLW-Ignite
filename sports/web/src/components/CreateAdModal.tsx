@@ -4,19 +4,24 @@ import * as Select from '@radix-ui/react-select';
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import { CaretDown, CaretUp, Check, GameController } from 'phosphor-react';
 import { Input } from './Form/input';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useContext, useEffect, useState } from 'react';
 import { WEEK_DAYS } from '../constants';
 import API from '../../api/api';
 import axios from 'axios';
 import { ButtonNlw } from './Button';
+import AuthContext, { Context } from '../context/auth';
 interface Game {
 	id: string;
 	title: string;
 }
 
 export function CreateAdModal() {
+	const context = useContext(AuthContext) as Context;
+	const discordNmae = `${context.state.user.username}#${context.state.user.discriminator}`;
+
 	const [games, setGames] = useState<Game[]>([]);
 	const [weekdays, setDays] = useState<string[]>([]);
+	const [discordname, setDiscordname] = useState<string>(discordNmae || '');
 
 	useEffect(function () {
 		const getAllGames = async () => {
@@ -138,6 +143,10 @@ export function CreateAdModal() {
 								id="discord"
 								name="discord"
 								placeholder="Usuario#0000"
+								value={discordname}
+								onChange={(event) =>
+									setDiscordname(event.target.value)
+								}
 							/>
 						</div>
 					</div>
@@ -163,6 +172,7 @@ export function CreateAdModal() {
 													? 'bg-violet-600'
 													: 'bg-zinc-900'
 											}`}
+											key={index}
 										>
 											{day.slice(0, 1).toUpperCase()}
 										</ToggleGroup.Item>
