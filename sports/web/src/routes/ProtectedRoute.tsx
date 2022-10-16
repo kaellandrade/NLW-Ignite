@@ -1,5 +1,5 @@
 import { Fragment, ReactNode, useContext } from 'react';
-import AuthContext, { Auth } from '../context/auth';
+import AuthContext, { Context } from '../context/auth';
 import { Navigate, useLocation } from 'react-router-dom';
 interface Props {
 	isPrivate: Boolean;
@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default function ProtectedRoute({ children, isPrivate }: Props) {
-	const context = useContext(AuthContext) as Auth;
+	const context = useContext(AuthContext) as Context;
 	const {signed} = context.state;
 	console.log(context);
 
