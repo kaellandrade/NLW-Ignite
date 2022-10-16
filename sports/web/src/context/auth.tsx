@@ -1,48 +1,73 @@
 import React, { createContext, useState } from 'react';
 import api from '../../api/api';
+const AuthContext = createContext({});
+
 export interface Auth {
 	signed?: Boolean;
 	loginError?: string;
 	token?: string;
-	name?: string;
-	nick?: string;
 	access_token: String;
 	expires_in: Number | null;
 	refresh_token: String;
+	user?: User | null;
 }
 
-const AuthContext = createContext({});
+export interface User {
+	username?: string;
+	avatar?: String;
+	id?: string;
+	discriminator?: string;
+}
+
+export interface Context {
+	state: Auth;
+	login: (code: string) => void;
+	setLogin: (estado: Auth) => void;
+	logout: () => void;
+}
+
 const INITIAL_STATE = {
 	access_token: '',
 	expires_in: null,
 	refresh_token: '',
 	signed: false,
-	name: '',
-	nick: '',
+	user: null,
 } as Auth;
 
 export const AuthProvider: React.FC = ({ children }) => {
-	const [state, setState] = useState(INITIAL_STATE);
+	const [state, setState] = useState<Auth>(INITIAL_STATE);
 
-	const setLogin = (teste: string) => setState(teste);
+	const setLogin = (estado: Auth) => {
+		setState(estado);
+	};
 
 	const login = (code: string) => {
 		handdleAuth(code);
 	};
+	const logout = () => {
+		setState(INITIAL_STATE);
+		sessionStorage.clear();
+	};
 
 	const handdleAuth = async (code: string) => {
-		// TODO: recuperar nome
 		try {
 			const { data } = await api.post(`login?code=${code}`);
-			setLogin({ ...data, signed: true });
-			// TODO: Recuperando avatar => https://cdn.discordapp.com/avatars/942844784987496488/ce90a085ea17354a33d3677e3737549b.jpg
 			api.defaults.headers.Authorization = `Bearer ${data.access_token}`;
 			const dadosReqPerfil = await api.get(
 				'https://discord.com/api/users/@me'
 			);
-			console.log(dadosReqPerfil.data);
+
+			setLogin({ ...data, signed: true, user: dadosReqPerfil.data });
+			sessionStorage.setItem(
+				'state',
+				JSON.stringify({
+					...data,
+					signed: true,
+					user: dadosReqPerfil.data,
+				})
+			);
 		} catch (error) {
-			setLogin({ signed: false });
+			setLogin({ ...state, signed: false });
 			console.log('Error!');
 		}
 	};
@@ -52,6 +77,8 @@ export const AuthProvider: React.FC = ({ children }) => {
 			value={{
 				state,
 				login,
+				setLogin,
+				logout
 			}}
 		>
 			{children}
