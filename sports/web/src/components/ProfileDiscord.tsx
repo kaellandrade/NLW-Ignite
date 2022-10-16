@@ -23,7 +23,7 @@ const CONFIG_TOAST = {
 export function ProfileDiscord(props: Props) {
 	const context = useContext(AuthContext) as Context;
 
-	const copyDiscord = (_) => {
+	const copyDiscord = () => {
 		toast.success('Copiado', CONFIG_TOAST);
 	};
 	const logout = () => {
