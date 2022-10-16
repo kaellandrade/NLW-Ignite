@@ -4,17 +4,31 @@ import { useSearchParams } from 'react-router-dom';
 import api from '../../../api/api';
 import logo from '../../assets/logo-nlw-esports.svg';
 import { ButtonNlw } from '../../components/Button';
-import AuthContext from '../../context/auth';
+import AuthContext, { Auth, Context } from '../../context/auth';
 
 export function Login() {
-	const context = useContext(AuthContext);
+	const context = useContext(AuthContext) as Context;
 	const [searchParams] = useSearchParams();
 	const code = searchParams.get('code');
+
+	const [stateStorage, setSessionStorage] = useState<Auth | null>(null);
+
+	const getFromSession = async () => {
+		const state = (await JSON.parse(
+			sessionStorage.getItem('state') || ''
+		)) as Auth;
+		setSessionStorage(state);
+	};
 	useEffect(() => {
+		getFromSession();
 		if (code) {
 			context.login(code);
 		}
-	}, [code]);
+
+		if (stateStorage) {
+			context.setLogin(stateStorage);
+		}
+	}, [code, stateStorage]);
 
 	const discordLogin = (event: FormEvent) => {
 		event.preventDefault();

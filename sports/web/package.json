@@ -15,13 +15,16 @@
     "@radix-ui/react-select": "^1.0.0",
     "@radix-ui/react-toggle-group": "^1.0.0",
     "@stitches/react": "^1.2.8",
+    "@types/react-copy-to-clipboard": "^5.0.4",
     "axios": "^0.27.2",
     "phosphor-react": "^1.4.1",
     "query-string": "^7.1.1",
     "react": "^18.2.0",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18.2.0",
     "react-remove-scroll-bar": "^2.3.3",
     "react-router-dom": "^6.4.2",
+    "react-toastify": "^9.0.8",
     "swiper": "^8.4.3"
   },
   "devDependencies": {
