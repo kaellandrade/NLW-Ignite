@@ -4,5 +4,6 @@
 - [X] [Utilizar Caroussel](https://swiperjs.com) 
 - [X] Responsividade 
 - [X] Utilizar Context API 
-- [] Criar uma rota 404 
-- [] Validação React Hook form
+- [X] SessionStorage
+- [ ] Criar uma rota 404 
+- [ ] Validação React Hook form
