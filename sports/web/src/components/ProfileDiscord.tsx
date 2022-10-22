@@ -4,27 +4,19 @@ import { toast } from 'react-toastify';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useContext } from 'react';
 import AuthContext, { Auth, Context } from '../context/auth';
+import {CONFIG_TOAST} from "../constants";
 
 interface Props {
 	name: string;
 	urlAvatar: string;
 	user: string;
 }
-const CONFIG_TOAST = {
-	position: 'top-center',
-	autoClose: 5000,
-	hideProgressBar: false,
-	closeOnClick: true,
-	pauseOnHover: true,
-	draggable: true,
-	progress: undefined,
-	theme: 'dark',
-} as any;
+
 export function ProfileDiscord(props: Props) {
 	const context = useContext(AuthContext) as Context;
 
 	const copyDiscord = () => {
-		toast.success('Copiado', CONFIG_TOAST);
+		toast.success('Nick copiado', CONFIG_TOAST);
 	};
 	const logout = () => {
 		context.logout();
