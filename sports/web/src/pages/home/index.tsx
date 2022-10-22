@@ -26,15 +26,16 @@ interface Game {
 }
 
 export function Home() {
+	const getAllGames = async () => {
+		const allGames = await API.get('/games');
+		setGames(allGames.data);
+	};
 	const [games, setGames] = useState<Game[]>([]);
 	const context = useContext(AuthContext) as Context;
 	const { username, avatar, id, discriminator } = context.state.user;
+	const [open, setOpen] = useState(false);
 
 	useEffect(function () {
-		const getAllGames = async () => {
-			const allGames = await API.get('/games');
-			setGames(allGames.data);
-		};
 		getAllGames();
 	}, []);
 
@@ -66,9 +67,9 @@ export function Home() {
 					</SwiperSlide>
 				))}
 			</Swiper>
-			<Dialog.Root>
+			<Dialog.Root open={open} onOpenChange={setOpen}>
 				<CreateAdBanner />
-				<CreateAdModal />
+				<CreateAdModal getAllGames={getAllGames} setOpen={setOpen}/>
 			</Dialog.Root>
 		</div>
 	);
