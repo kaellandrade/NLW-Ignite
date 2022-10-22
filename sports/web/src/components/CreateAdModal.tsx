@@ -5,17 +5,24 @@ import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import { CaretDown, CaretUp, Check, GameController } from 'phosphor-react';
 import { Input } from './Form/input';
 import { FormEvent, useContext, useEffect, useState } from 'react';
-import { WEEK_DAYS } from '../constants';
+import {CONFIG_TOAST, WEEK_DAYS} from '../constants';
 import API from '../../api/api';
 import axios from 'axios';
 import { ButtonNlw } from './Button';
 import AuthContext, { Context } from '../context/auth';
+import {toast} from "react-toastify";
 interface Game {
 	id: string;
 	title: string;
 }
 
-export function CreateAdModal() {
+
+export function CreateAdModal(props) {
+	const getAllGames = async () => {
+		const allGames = await API.get('/games');
+		setGames(allGames.data);
+	};
+
 	const context = useContext(AuthContext) as Context;
 	const discordNmae = `${context.state.user.username}#${context.state.user.discriminator}`;
 
@@ -24,16 +31,10 @@ export function CreateAdModal() {
 	const [discordname, setDiscordname] = useState<string>(discordNmae || '');
 
 	useEffect(function () {
-		const getAllGames = async () => {
-			const allGames = await API.get('/games');
-			setGames(allGames.data);
-		};
 		getAllGames();
 	}, []);
 
-	function handleCreateAd(event: FormEvent) {
-		// Validar
-
+	async function handleCreateAd(event: FormEvent) {
 		event.preventDefault();
 		const formData = new FormData(event.target as HTMLFormElement);
 		const data = Object.fromEntries(formData);
@@ -47,7 +48,7 @@ export function CreateAdModal() {
 				return { ...pre, ...cur };
 			}, {});
 		try {
-			API.post(`/games/${data.game}/ads`, {
+			await API.post(`/games/${data.game}/ads`, {
 				name: data.name,
 				yearsPlaying: Number(data.yearsPlaying),
 				discord: data.discord,
@@ -56,9 +57,11 @@ export function CreateAdModal() {
 				hourEnd: data.hoursEnd,
 				useVoiceChannel: Boolean(data.useVoiceChannel),
 			});
-			alert('Anúcio criado com sucesso!');
+			props.setOpen(false);
+			toast.success('Anúncio criado com sucesso.', CONFIG_TOAST);
+			props.getAllGames();
 		} catch (error) {
-			alert(error);
+			toast.success('Ops! Não foi possível criar seu anúncio. Tente mais tarde.', CONFIG_TOAST);
 		}
 	}
 
