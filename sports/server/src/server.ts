@@ -28,6 +28,20 @@ app.get('/games', async (request, response) => {
 	return response.json(game);
 });
 
+app.get('/ads/:id/discord', async (request, response) => {
+	const id = request.params.id;
+
+	const discord = await prisma.ad.findFirst({
+		where: { id },
+		select: {
+			discord: true
+		},
+	});
+
+	return response.json(discord);
+
+})
+
 app.post('/games/:id/ads', async (request, response) => {
 	const gameId = request.params.id;
 	const body: any = request.body;
