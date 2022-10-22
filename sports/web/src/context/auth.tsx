@@ -1,5 +1,7 @@
 import React, { createContext, useState } from 'react';
 import api from '../../api/api';
+import {toast} from "react-toastify";
+import {CONFIG_TOAST} from "../constants";
 const AuthContext = createContext({});
 
 export interface Auth {
@@ -58,14 +60,17 @@ export const AuthProvider: React.FC = ({ children }) => {
 			);
 
 			setLogin({ ...data, signed: true, user: dadosReqPerfil.data });
-			sessionStorage.setItem(
-				'state',
-				JSON.stringify({
-					...data,
-					signed: true,
-					user: dadosReqPerfil.data,
-				})
-			);
+			if(!sessionStorage.getItem('state')){
+				await sessionStorage.setItem(
+					'state',
+					JSON.stringify({
+						...data,
+						signed: true,
+						user: dadosReqPerfil.data,
+					})
+				);
+				toast.success(`Que bom vê-lo novamente, ${dadosReqPerfil.data.username}`, CONFIG_TOAST);
+			}
 		} catch (error) {
 			setLogin({ ...state, signed: false });
 			console.log('Error!');
