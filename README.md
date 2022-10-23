@@ -1,4 +1,4 @@
-# NLW-Ignite
+# NLW-Ignite :heavy_check_mark:
 
 ## Anotações
 
@@ -8,9 +8,17 @@
 4. [X] [Aula 04 - Power up](aula04)
 5. [X] [Aula 05 - Final Round :rocket:](aula05)
 
+----
+Está aplicação foi construída pensando em pessoas que gostam de jogar e estão procurando por duos. A versão WEB permite você
+logar con Discord e cadastrar um anúncio para um determiando jogo. A aplicação mobile lista todos os jogos com os anúncios de duos 
+cadastrados. Basta copiar o Discord e partir para o fight! :joystick:
+
+A aplicação foi construída na [NLW](https://www.rocketseat.com.br/), porém muitas coisas foram implementadas por fora, e também fugir um pouco das tecnologias usadas. 
+Por exemplo, a parte de **autenticação com Discord**, 
+utilização de **context API** para gerenciar os estados, implementação de rotas, utilização do **Docker**, **MYSQL** e diversas outras libs/tecnologias.
 # Telas
 
-## WEB
+## WEB 	:computer:
 
 <table>
   <tr>
@@ -50,7 +58,7 @@
 </table>
 
 
-## Mobile
+## Mobile :iphone:
 <table>
   <tr>
     <td>
