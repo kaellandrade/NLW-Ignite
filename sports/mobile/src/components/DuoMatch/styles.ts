@@ -38,6 +38,11 @@ export const styles = StyleSheet.create({
 		fontFamily: THEME.FONT_FAMILY.SEMI_BOLD,
 		marginTop: 24,
 		marginBottom: 24
+	},
+	toast: {
+		color: THEME.COLORS.SHAPE,
+		fontSize: THEME.FONT_SIZE.MD,
+		fontFamily: THEME.FONT_FAMILY.SEMI_BOLD,
 	}
 })
 

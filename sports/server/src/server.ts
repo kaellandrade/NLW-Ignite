@@ -1,16 +1,17 @@
+import 'dotenv/config'
 import url from 'url';
 import axios from 'axios';
 import express from 'express';
 import cors from 'cors';
-import { PrismaClient } from '@prisma/client';
+import {PrismaClient} from '@prisma/client';
 import {
 	convertHoursStringToMinutes,
 	convertMinutesToString,
 } from './utils/convertTime';
+
 const app = express();
 app.use(express.json());
 app.use(cors());
-
 const prisma = new PrismaClient({
 	log: ['query'],
 });
@@ -32,7 +33,7 @@ app.get('/ads/:id/discord', async (request, response) => {
 	const id = request.params.id;
 
 	const discord = await prisma.ad.findFirst({
-		where: { id },
+		where: {id},
 		select: {
 			discord: true
 		},
@@ -63,10 +64,10 @@ app.post('/games/:id/ads', async (request, response) => {
 });
 
 app.get('/games/:gameId/ads', async (request, response) => {
-	const { gameId } = request.params;
+	const {gameId} = request.params;
 
 	const ads = await prisma.ad.findMany({
-		where: { gameId },
+		where: {gameId},
 		select: {
 			id: true,
 			name: true,
@@ -113,12 +114,12 @@ app.post('/games/:id/ads', async (request, response) => {
 });
 
 app.post('/login', async (request, response) => {
-	const { code } = request.query;
+	const {code} = request.query;
 	if (code) {
 		try {
 			const formData = new url.URLSearchParams({
-				client_id: '1028716796179660914',
-				client_secret: 'Q_A0kjJOvkP3AoVuKS07R_pfSh6fclQQ',
+				client_id: process.env.CLIENT_ID!,
+				client_secret: process.env.CLIENT_SECRET!,
 				code: code.toString(),
 				grant_type: 'authorization_code',
 				redirect_uri: 'http://localhost:5173',
